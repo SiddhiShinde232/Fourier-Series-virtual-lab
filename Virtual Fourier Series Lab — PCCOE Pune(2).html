@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://preview-%2Dfourier-fun-lab.lovable.app/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" as="image" href="./Virtual Fourier Series Lab — PCCOE Pune(2)_files/pccoe-logo-g-KcK5oB.png"><link rel="stylesheet" href="./Virtual Fourier Series Lab — PCCOE Pune(2)_files/styles-DGdaS0Lp.css" data-precedence="default"><title>Virtual Fourier Series Lab — PCCOE Pune</title><meta name="author" content="Lovable"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@Lovable"><meta name="twitter:title" content="Lovable App"><meta name="twitter:description" content="Fourier Fun Zone is an interactive web application for exploring Fourier series with theory, quizzes, and simulations."><meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ddb26bed-cb7d-4324-826e-9780c41dea1c/id-preview-1cf79ee8--ac6eee9b-abfe-4f88-a2ce-bb7a7c3261f0.lovable.app-1779392315079.png"><meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ddb26bed-cb7d-4324-826e-9780c41dea1c/id-preview-1cf79ee8--ac6eee9b-abfe-4f88-a2ce-bb7a7c3261f0.lovable.app-1779392315079.png"><meta name="description" content="Virtual Fourier Series Lab by PCCOE Pune: theory, formulas, worked examples, interactive simulation, and quiz on Fourier series over [0, 2π]."><meta property="og:title" content="Virtual Fourier Series Lab — PCCOE Pune"><meta property="og:description" content="Interactive Fourier series learning lab developed at PCCOE Pune."><link rel="modulepreload" href="https://preview--fourier-fun-lab.lovable.app/assets/index-BKHy6408.js"><link rel="modulepreload" href="https://preview--fourier-fun-lab.lovable.app/assets/index-D9cSJY1B.js"><link rel="modulepreload" href="https://preview--fourier-fun-lab.lovable.app/assets/katex-I1wV-MyX.js">
+<style>
+	@font-face {
+		font-family: 'CameraPlainVariable';
+		src: url('https://cdn.gpteng.co/mcp-widgets/v1/fonts/CameraPlainVariable.woff2') format('woff2');
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	#lovable-badge {
+		--badge-bg: #1b1b1b;
+		--badge-text: #c5c1b9;
+		--badge-text-hover: #dcdad5;
+		--badge-radius: 6px;
+		--badge-padding: 8px;
+		--badge-gap: 6px;
+		--badge-shadow: 
+			0 0 0 1px rgba(0, 0, 0, 0.88),
+			0 1px 0 0 rgba(0, 0, 0, 0.04),
+			0 2px 2px -1px rgba(0, 0, 0, 0.08),
+			0 4px 4px -2px rgba(0, 0, 0, 0.08),
+			0 8px 8px -4px rgba(0, 0, 0, 0.08),
+			0 16px 16px -8px rgba(0, 0, 0, 0.08);
+		--badge-transition-duration: 0.2s;
+		--badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
+		--focus-color: #575ECF;
+		--focus-offset: 2px;
+		--focus-width: 2px;
+		
+		position: fixed;
+		bottom: 12px;
+		right: 12px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		z-index: 1000000;
+		background-color: var(--badge-bg);
+		color: var(--badge-text);
+		border-radius: var(--badge-radius);
+		box-shadow: var(--badge-shadow);
+		font-size: 12px;
+		font-family: CameraPlainVariable, "CameraPlainVariable Fallback", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		font-weight: 400 !important;
+		text-transform: none !important;
+		font-feature-settings: normal !important;
+		transform: translateZ(0);
+		will-change: transform, opacity;
+	}
+
+	#lovable-badge-cta {
+		display: flex;
+		align-items: center;
+		gap: var(--badge-gap);
+		padding: 0 var(--badge-padding);
+		height: 100%;
+		color: inherit;
+		text-decoration: none;
+		white-space: nowrap;
+		border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-cta:hover {
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--badge-text-hover);
+	}
+
+	#lovable-badge-cta:active {
+		transform: scale(0.98);
+	}
+
+	#lovable-badge-cta:focus {
+		outline: none;
+	}
+
+	#lovable-badge-cta:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: var(--focus-offset);
+		z-index: 1;
+	}
+
+	#lovable-badge-text {
+		line-height: 1;
+	}
+
+	#lovable-badge-divider {
+		width: 1px;
+		height: 24px;
+		background-color: rgba(255, 255, 255, 0.04);
+		flex-shrink: 0;
+	}
+
+	#lovable-badge-close {
+		width: 24px;
+		height: 24px;
+		min-width: 24px;
+		min-height: 24px;
+		cursor: pointer;
+		background: none;
+		border: none;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
+		flex-shrink: 0;
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-close:hover {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	#lovable-badge-close:active {
+		transform: scale(0.92);
+	}
+
+	#lovable-badge-close:focus {
+		outline: none;
+	}
+
+	#lovable-badge-close:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: calc(var(--focus-offset) * -1);
+		z-index: 1;
+	}
+
+	#lovable-badge-close svg path {
+		fill: var(--badge-text);
+		transition: fill var(--badge-transition-duration) ease;
+	}
+
+	#lovable-badge-close:hover svg path {
+		fill: var(--badge-text-hover);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#lovable-badge-cta,
+		#lovable-badge-close,
+		#lovable-badge-close svg path {
+			transition: none;
+		}
+		
+		#lovable-badge-cta:active,
+		#lovable-badge-close:active {
+			transform: none;
+		}
+	}
+
+	@media (prefers-contrast: high) {
+		#lovable-badge {
+			--badge-bg: #000;
+			--badge-text: #fff;
+			--badge-text-hover: #fff;
+			border: 2px solid currentColor;
+		}
+		
+		#lovable-badge-cta:focus-visible,
+		#lovable-badge-close:focus-visible {
+			outline-width: 3px;
+		}
+	}
+</style>
+</head><body><!--$--><div class="min-h-screen bg-background"><header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur"><div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"><a class="font-serif text-xl font-bold tracking-tight text-foreground active" href="https://preview--fourier-fun-lab.lovable.app/" data-status="active" aria-current="page">ℱ · Fourier Series</a><nav class="flex flex-wrap gap-1 text-sm"><a class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground rounded-md px-3 py-1.5 bg-primary text-primary-foreground" href="https://preview--fourier-fun-lab.lovable.app/" data-status="active" aria-current="page">Home</a><a href="https://preview--fourier-fun-lab.lovable.app/theory" class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Theory</a><a href="https://preview--fourier-fun-lab.lovable.app/formula" class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Formula</a><a href="https://preview--fourier-fun-lab.lovable.app/examples" class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Examples</a><a href="https://preview--fourier-fun-lab.lovable.app/simulation" class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Simulation</a><a href="https://preview--fourier-fun-lab.lovable.app/quiz" class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Quiz</a></nav></div></header><main class="relative overflow-hidden"><div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10"><div class="absolute -top-32 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl"></div><div class="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-chart-4/10 blur-3xl"></div><svg class="absolute inset-x-0 top-1/3 w-full opacity-[0.07]" viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0,100 Q150,20 300,100 T600,100 T900,100 T1200,100" fill="none" stroke="currentColor" stroke-width="2"></path><path d="M0,120 Q150,40 300,120 T600,120 T900,120 T1200,120" fill="none" stroke="currentColor" stroke-width="2"></path><path d="M0,80 Q150,160 300,80 T600,80 T900,80 T1200,80" fill="none" stroke="currentColor" stroke-width="2"></path></svg></div><section class="mx-auto max-w-5xl px-6 pt-12 pb-10 text-center"><div class="flex flex-col items-center gap-4"><img src="./Virtual Fourier Series Lab — PCCOE Pune(2)_files/pccoe-logo-g-KcK5oB.png" alt="PCCOE Pune logo" width="96" height="96" class="h-24 w-24 rounded-full bg-white object-contain p-1 shadow-md ring-2 ring-primary/20"><div><h2 class="font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">PCCOE PUNE</h2><p class="mt-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">Pimpri Chinchwad College of Engineering</p></div></div><div class="mx-auto my-8 h-px w-32 bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div><p class="mb-3 text-xs uppercase tracking-[0.3em] text-primary">A Virtual Learning Project</p><h1 class="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-6xl">Virtual <span class="text-primary">Fourier Series</span> Lab</h1><p class="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">Explore how any periodic function on <span class="font-mono">[0, 2π]</span> decomposes into sines and cosines — through theory, formulas, examples, and an interactive simulator.</p><div class="mx-auto mt-8 max-w-xl rounded-xl border border-border bg-card/80 p-5 shadow-sm backdrop-blur"><div data-testid="react-katex"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><msub><mi>a</mi><mn>0</mn></msub><mn>2</mn></mfrac><mo>+</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><mi mathvariant="normal">∞</mi></munderover><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><msub><mi>a</mi><mi>n</mi></msub><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mi>x</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>b</mi><mi>n</mi></msub><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mi>x</mi><mo stretchy="false">)</mo><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo></mrow><annotation encoding="application/x-tex">f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\bigl[a_n\cos(nx) + b_n\sin(nx)\bigr]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.7936em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1076em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.9185em;vertical-align:-1.2671em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8829em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2671em;"><span></span></span></span></span></span><span class="mopen"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mclose"><span class="delimsizing size1">]</span></span></span></span></span></span></div></div><div class="mt-8 flex flex-wrap justify-center gap-3"><a href="https://preview--fourier-fun-lab.lovable.app/simulation" class="rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90">Launch Simulator →</a><a href="https://preview--fourier-fun-lab.lovable.app/theory" class="rounded-md border border-border bg-card px-6 py-3 text-sm font-medium text-foreground transition hover:bg-accent">Start with Theory</a></div></section><section class="mx-auto max-w-5xl px-6 pb-12"><div class="grid gap-5 md:grid-cols-[2fr_1fr]"><div class="rounded-xl border border-border bg-card p-6 shadow-sm"><p class="text-xs uppercase tracking-[0.2em] text-primary">Developed by</p><ul class="mt-4 grid gap-3 sm:grid-cols-3"><li class="rounded-lg border border-border/60 bg-background/60 p-3 text-center"><p class="font-serif text-base font-semibold text-foreground">Siddhi Shinde</p><p class="mt-1 font-mono text-xs text-muted-foreground">PRN: <!-- -->125B1D059</p></li><li class="rounded-lg border border-border/60 bg-background/60 p-3 text-center"><p class="font-serif text-base font-semibold text-foreground">Shravani Gunjal</p><p class="mt-1 font-mono text-xs text-muted-foreground">PRN: <!-- -->125B1D073</p></li><li class="rounded-lg border border-border/60 bg-background/60 p-3 text-center"><p class="font-serif text-base font-semibold text-foreground">Swara Masanakatti</p><p class="mt-1 font-mono text-xs text-muted-foreground">PRN: <!-- -->125B1D072</p></li></ul></div><div class="rounded-xl border border-border bg-gradient-to-br from-primary/10 to-card p-6 shadow-sm"><p class="text-xs uppercase tracking-[0.2em] text-primary">Guided by</p><p class="mt-4 font-serif text-xl font-bold text-foreground">Dr. Amruta Patil</p><p class="mt-1 text-sm text-muted-foreground">Faculty Mentor</p></div></div></section><section class="mx-auto max-w-6xl px-6 pb-20"><h3 class="mb-6 text-center font-serif text-2xl font-semibold text-foreground">Explore the Lab</h3><div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"><a href="https://preview--fourier-fun-lab.lovable.app/theory" class="group rounded-xl border border-border bg-card p-6 transition hover:border-primary hover:shadow-md"><h4 class="font-serif text-xl font-semibold text-foreground group-hover:text-primary">Theory</h4><p class="mt-2 text-sm text-muted-foreground">Periodic functions, orthogonality, and convergence on [0, 2π].</p><span class="mt-4 inline-block text-sm text-primary opacity-0 transition group-hover:opacity-100">Open →</span></a><a href="https://preview--fourier-fun-lab.lovable.app/formula" class="group rounded-xl border border-border bg-card p-6 transition hover:border-primary hover:shadow-md"><h4 class="font-serif text-xl font-semibold text-foreground group-hover:text-primary">Formula</h4><p class="mt-2 text-sm text-muted-foreground">Coefficient formulas a₀, aₙ, bₙ on the interval 0 to 2π.</p><span class="mt-4 inline-block text-sm text-primary opacity-0 transition group-hover:opacity-100">Open →</span></a><a href="https://preview--fourier-fun-lab.lovable.app/examples" class="group rounded-xl border border-border bg-card p-6 transition hover:border-primary hover:shadow-md"><h4 class="font-serif text-xl font-semibold text-foreground group-hover:text-primary">Examples</h4><p class="mt-2 text-sm text-muted-foreground">Worked Fourier expansions for classic functions.</p><span class="mt-4 inline-block text-sm text-primary opacity-0 transition group-hover:opacity-100">Open →</span></a><a href="https://preview--fourier-fun-lab.lovable.app/simulation" class="group rounded-xl border border-border bg-card p-6 transition hover:border-primary hover:shadow-md"><h4 class="font-serif text-xl font-semibold text-foreground group-hover:text-primary">Simulation</h4><p class="mt-2 text-sm text-muted-foreground">Launch the interactive partial-sum visualizer.</p><span class="mt-4 inline-block text-sm text-primary opacity-0 transition group-hover:opacity-100">Open →</span></a><a href="https://preview--fourier-fun-lab.lovable.app/quiz" class="group rounded-xl border border-border bg-card p-6 transition hover:border-primary hover:shadow-md"><h4 class="font-serif text-xl font-semibold text-foreground group-hover:text-primary">Quiz</h4><p class="mt-2 text-sm text-muted-foreground">Test your understanding with quick MCQs.</p><span class="mt-4 inline-block text-sm text-primary opacity-0 transition group-hover:opacity-100">Open →</span></a></div></section></main><footer class="border-t border-border py-6 text-center text-xs text-muted-foreground">© Virtual Fourier Series Lab · PCCOE Pune</footer></div><!--/$--><script src="./Virtual Fourier Series Lab — PCCOE Pune(2)_files/lovable.js.download" type="module"></script>
+<aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
+	<a id="lovable-badge-cta" target="_blank" href="https://lovable.dev/projects/ac6eee9b-abfe-4f88-a2ce-bb7a7c3261f0?utm_source=lovable-badge" rel="noopener nofollow" aria-label="Edit with Lovable">
+		<span id="lovable-badge-text">Edit with</span>
+		<svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
+  <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd"></path>
+  <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z"></path>
+  <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd"></path>
+  <defs>
+    <radialgradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
+      <stop offset=".106" stop-color="#FE7B02"></stop>
+      <stop offset=".394" stop-color="#FE3F21"></stop>
+      <stop offset=".608" stop-color="#F858BC"></stop>
+      <stop offset=".929" stop-color="#575ECF"></stop>
+    </radialgradient>
+  </defs>
+</svg>
+
+
+	</a>
+	
+	<span id="lovable-badge-divider" aria-hidden="true"></span>
+	
+	<button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+			<path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z"></path>
+		</svg>
+	</button>
+</aside>
+<script>
+	// Don't show the lovable-badge if the page is in an iframe or if it's being rendered by puppeteer (screenshot service)
+	if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+		// the page is in an iframe
+		var badge = document.getElementById('lovable-badge');
+		if (badge) {
+			badge.style.display = 'none';
+		}
+	}
+
+	// Add click event listener to close button with animation
+	var closeButton = document.getElementById('lovable-badge-close');
+	if (closeButton) {
+		closeButton.addEventListener('click', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			var badge = document.getElementById('lovable-badge');
+			if (badge) {
+				badge.classList.add('closing');
+				setTimeout(function() {
+					if (badge) {
+						badge.style.display = 'none';
+					}
+				}, 240);
+			}
+		});
+	}
+</script>
+</body></html>
