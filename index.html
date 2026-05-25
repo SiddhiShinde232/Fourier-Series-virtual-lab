@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Fourier Series Lab — PCCOE Pune</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMath()"></script>
+
+  <style>
+    /* ── Root variables ─────────────────────────────────────── */
+    :root {
+      --blue-dark:  #0d1b4b;
+      --blue-mid:   #1565c0;
+      --blue-light: #e3f2fd;
+      --teal:       #00897b;
+      --teal-light: #e0f7fa;
+      --purple:     #7b1fa2;
+      --purple-light:#f3e5f5;
+      --orange:     #e65100;
+      --orange-light:#fff3e0;
+      --green-light: #e8f5e9;
+      --bg:         #f0f5ff;
+      --white:      #ffffff;
+      --text:       #1a1a2e;
+      --text2:      #546e7a;
+      --border:     #cfd8dc;
+      --shadow:     0 3px 16px rgba(0,0,0,0.10);
+      --radius:     14px;
+      --transition: 0.25s ease;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Navigation ─────────────────────────────────────────── */
+    .nav {
+      background: linear-gradient(135deg, #0d1b4b 0%, #1a3a7a 60%, #1565c0 100%);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+    }
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      padding: 15px 22px;
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      border-bottom: 3px solid transparent;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.10); }
+    .nav-tab.active {
+      color: #64b5f6;
+      border-bottom-color: #64b5f6;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ── Sections ───────────────────────────────────────────── */
+    .section { display: none; animation: fadeIn 0.3s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+    /* ── Page wrapper ───────────────────────────────────────── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 30px 18px 60px; }
+
+    /* ── Cards ──────────────────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 30px;
+      margin-bottom: 24px;
+    }
+    .card-blue   { background: var(--blue-light); }
+    .card-teal   { background: var(--teal-light); }
+    .card-purple { background: var(--purple-light); }
+    .card-orange { background: var(--orange-light); }
+    .card-green  { background: var(--green-light); }
+
+    /* ── Headings ───────────────────────────────────────────── */
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 6px;
+    }
+    .section-sub {
+      color: var(--text2);
+      font-size: 0.97rem;
+      margin-bottom: 28px;
+    }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--blue-mid); margin-bottom: 12px; }
+    h4 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+
+    p { line-height: 1.75; color: var(--text); margin-bottom: 10px; }
+
+    /* ── Formula box ────────────────────────────────────────── */
+    .formula-box {
+      background: linear-gradient(135deg, #e8eeff, #ddeeff);
+      border-left: 5px solid var(--blue-mid);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 16px 0;
+      font-size: 1.05rem;
+      overflow-x: auto;
+    }
+    .formula-box .katex { font-size: 1.15rem; }
+
+    /* ── Example step ───────────────────────────────────────── */
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .step-num {
+      min-width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--blue-mid);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .step-content { flex:1; }
+
+    /* ── Simulator ──────────────────────────────────────────── */
+    .sim-grid { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+    @media(max-width:780px){ .sim-grid { grid-template-columns: 1fr; } }
+
+    .sim-panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
+    .sim-panel h3 { margin-bottom: 18px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 5px;
+      letter-spacing: 0.3px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #f8faff;
+      color: var(--text);
+      transition: border-color var(--transition);
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--blue-mid);
+      background: #fff;
+    }
+
+    .inline-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 9px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-primary { background: var(--blue-mid); color: #fff; width: 100%; justify-content: center; }
+    .btn-primary:hover { background: #0d47a1; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(21,101,192,0.4); }
+    .btn-secondary { background: var(--teal); color: #fff; }
+    .btn-secondary:hover { background: #00695c; }
+    .btn-outline { background: transparent; color: var(--blue-mid); border: 2px solid var(--blue-mid); }
+    .btn-outline:hover { background: var(--blue-light); }
+
+    /* ── Coefficient table ──────────────────────────────────── */
+    .coeff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .coeff-table th {
+      background: var(--blue-dark);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .coeff-table td {
+      padding: 9px 14px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Consolas', monospace;
+    }
+    .coeff-table tr:nth-child(even) td { background: #f0f5ff; }
+    .coeff-table tr:hover td { background: #ddeeff; }
+
+    /* ── Canvas ─────────────────────────────────────────────── */
+    .canvas-wrap {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      background: #fafcff;
+    }
+    .canvas-legend {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      margin-top: 12px; font-size: 0.83rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 14px; height: 4px; border-radius: 2px; }
+
+    /* ── Series output ──────────────────────────────────────── */
+    .series-output {
+      background: #e8eeff;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 18px;
+      font-family: 'Consolas', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      word-break: break-word;
+      border-left: 4px solid var(--blue-mid);
+    }
+    .series-label { font-size: 0.78rem; color: var(--text2); font-weight: 600; margin-bottom: 4px; font-family: 'Segoe UI', sans-serif; }
+
+    /* ── Quiz ───────────────────────────────────────────────── */
+    .quiz-question {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .quiz-q-text {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: var(--blue-dark);
+      line-height: 1.5;
+    }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media(max-width:600px){ .quiz-options { grid-template-columns: 1fr; } }
+    .quiz-option {
+      padding: 11px 16px;
+      border: 2px solid var(--border);
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      display: flex; align-items: center; gap: 8px;
+      background: #f8faff;
+    }
+    .quiz-option:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+    .quiz-option.correct { border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; }
+    .quiz-option.wrong   { border-color: #c62828; background: #ffebee; color: #b71c1c; }
+    .quiz-option.selected { border-color: var(--blue-mid); background: var(--blue-light); }
+
+    .score-card {
+      background: linear-gradient(135deg, #1565c0, #00897b);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .score-card .big-num { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+    .score-card .label { font-size: 1rem; opacity: 0.85; margin-top: 6px; }
+
+    /* ── Cover / Home ───────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, #ffffff 0%, #ddeeff 50%, #e0f7fa 100%);
+      border-radius: 18px;
+      padding: 40px 36px 32px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(21,101,192,0.12), transparent 70%);
+    }
+    .hero-logo { width: 90px; height: 90px; object-fit: contain; margin-bottom: 10px; }
+    .hero-inst {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      letter-spacing: 0.5px;
+    }
+    .hero-dept { font-size: 0.85rem; color: var(--text2); margin-bottom: 18px; }
+    .hero-divider { height: 2px; background: linear-gradient(90deg, transparent, var(--blue-mid), transparent); margin: 16px auto; max-width: 300px; }
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #0d1b4b, #1565c0, #00897b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .hero-subtitle { color: var(--text2); font-size: 0.95rem; margin-bottom: 24px; }
+
+    /* Animated wave SVG */
+    .wave-anim { width: 100%; height: 60px; margin: 10px 0; }
+
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 8px; }
+    .team-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px 18px;
+      text-align: left;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--blue-mid);
+    }
+    .team-card.guide { border-top-color: var(--teal); }
+    .team-name { font-weight: 700; font-size: 0.97rem; color: var(--blue-dark); }
+    .team-prn  { font-size: 0.78rem; color: var(--text2); margin-top: 2px; font-family: monospace; }
+    .team-role { font-size: 0.75rem; font-weight: 600; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .team-card.guide .team-role { color: var(--teal); }
+
+    .quick-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 28px; }
+    .quick-card {
+      padding: 20px 16px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+    .quick-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); border-color: var(--blue-mid); }
+    .quick-card .icon { font-size: 2rem; margin-bottom: 8px; }
+    .quick-card .title { font-size: 0.9rem; font-weight: 600; }
+    .quick-card .sub   { font-size: 0.75rem; opacity: 0.8; margin-top: 2px; }
+
+    /* ── Tabs (inner) ───────────────────────────────────────── */
+    .inner-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+    .inner-tab {
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: var(--white);
+      color: var(--text2);
+      transition: var(--transition);
+    }
+    .inner-tab.active, .inner-tab:hover { border-color: var(--blue-mid); color: var(--blue-mid); background: var(--blue-light); }
+
+    /* ── Example cards ──────────────────────────────────────── */
+    .example-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .ex-tab {
+      padding: 14px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: var(--white);
+      transition: var(--transition);
+    }
+    .ex-tab.active { border-color: var(--blue-mid); background: var(--blue-light); }
+    .ex-tab h4 { font-size: 0.9rem; margin: 0; }
+    .ex-tab p  { font-size: 0.78rem; color: var(--text2); margin: 2px 0 0; }
+
+    .result-highlight {
+      background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 14px;
+      border-left: 5px solid var(--teal);
+    }
+    .result-highlight strong { color: var(--blue-dark); }
+
+    /* ── Misc ───────────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+    .badge-blue   { background: #ddeeff; color: var(--blue-mid); }
+    .badge-teal   { background: var(--teal-light); color: var(--teal); }
+    .badge-purple { background: var(--purple-light); color: var(--purple); }
+    .badge-orange { background: var(--orange-light); color: var(--orange); }
+
+    table { width: 100%; }
+
+    ul, ol { padding-left: 22px; line-height: 2; }
+    li { margin-bottom: 4px; }
+
+    .math-inline { font-style: italic; color: var(--blue-dark); }
+    .highlight { background: #fff9c4; padding: 2px 6px; border-radius: 4px; }
+
+    .notice {
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin: 12px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      color: var(--text2);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      background: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ NAV -->
+<nav class="nav">
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('home',this)">🏠 Home</div>
+    <div class="nav-tab" onclick="showTab('theory',this)">📚 Theory</div>
+    <div class="nav-tab" onclick="showTab('formula',this)">📐 Formulas</div>
+    <div class="nav-tab" onclick="showTab('examples',this)">✏️ Examples</div>
+    <div class="nav-tab" onclick="showTab('simulator',this)">⚡ Simulator</div>
+    <div class="nav-tab" onclick="showTab('quiz',this)">🎯 Quiz</div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════ HOME -->
+<section class="section active" id="home">
+  <div class="page">
+
+    <!-- Hero / Cover -->
+    <div class="hero">
+      <img src="pccoe-logo.png" alt="PCCOE Logo" class="hero-logo" onerror="this.style.display='none'">
+      <div class="hero-inst">PCCOE, PUNE</div>
+      <div class="hero-dept">Pimpri Chinchwad College of Engineering, Pune – 411044</div>
+      <div class="hero-divider"></div>
+      <div class="hero-title">Virtual Fourier Series Lab</div>
+      <div class="hero-subtitle">An Interactive Virtual Laboratory for Fourier Series over [0, 2π]</div>
+
+      <!-- Animated Sine Wave -->
+      <svg class="wave-anim" viewBox="0 0 800 60" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1565c0" stop-opacity="0.7"/>
+            <stop offset="50%" stop-color="#00897b" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#7b1fa2" stop-opacity="0.7"/>
+          </linearGradient>
+        </defs>
+        <path id="wavePath1" fill="none" stroke="url(#waveGrad)" stroke-width="3"/>
+        <path id="wavePath2" fill="none" stroke="#1565c020" stroke-width="2"/>
+        <path id="wavePath3" fill="none" stroke="#00897b30" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- Team info -->
+    <div class="card">
+      <h3 style="color:var(--blue-dark);font-size:1rem;margin-bottom:16px;">👨‍💻 Developed By &amp; Guided By</h3>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-role">Developer</div>
+          <div class="team-name">Siddhi Shinde</div>
+          <div class="team-prn">PRN: 125B1D059</div>
+        </div>
+        <div class="team-card">
+          <div class="team-role">Developer</div>
+          <div class="team-name">Shravani Gunjal</div>
+          <div class="team-prn">PRN: 125B1D073</div>
+        </div>
+        <div class="team-card">
+          <div class="team-role">Developer</div>
+          <div class="team-name">Swara Masanakatti</div>
+          <div class="team-prn">PRN: 125B1D072</div>
+        </div>
+        <div class="team-card guide">
+          <div class="team-role">Guide</div>
+          <div class="team-name">Dr. Amruta Patil</div>
+          <div class="team-prn">Faculty, Mathematics Dept.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick access cards -->
+    <h3 style="margin-bottom:12px;">Explore the Lab</h3>
+    <div class="quick-cards">
+      <div class="quick-card card-blue" onclick="showTabId('theory')">
+        <div class="icon">📚</div>
+        <div class="title">Theory</div>
+        <div class="sub">Concepts &amp; history</div>
+      </div>
+      <div class="quick-card card-purple" onclick="showTabId('formula')">
+        <div class="icon">📐</div>
+        <div class="title">Formulas</div>
+        <div class="sub">a₀, aₙ, bₙ formulas</div>
+      </div>
+      <div class="quick-card card-green" onclick="showTabId('examples')">
+        <div class="icon">✏️</div>
+        <div class="title">Examples</div>
+        <div class="sub">4 worked problems</div>
+      </div>
+      <div class="quick-card card-orange" onclick="showTabId('simulator')">
+        <div class="icon">⚡</div>
+        <div class="title">Simulator</div>
+        <div class="sub">Interactive calculator</div>
+      </div>
+      <div class="quick-card card-teal" onclick="showTabId('quiz')">
+        <div class="icon">🎯</div>
+        <div class="title">Quiz</div>
+        <div class="sub">Test your knowledge</div>
+      </div>
+    </div>
+
+    <!-- About box -->
+    <div class="card card-blue" style="margin-top:24px;">
+      <h3>About This Lab</h3>
+      <p>This <strong>Virtual Fourier Series Lab</strong> provides an interactive environment for exploring Fourier series mathematics. Using this lab, you can study the theory, see the formulas, examine worked examples, and run your own simulations — computing \(a_0\), \(a_n\), and \(b_n\) coefficients for any user-defined function on an arbitrary integration interval.</p>
+      <p style="margin:0">All wave visualizations are computed in real time using numerical integration (midpoint rule), giving instant feedback as you experiment with different functions and number of harmonic terms.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════ THEORY -->
+<section class="section" id="theory">
+  <div class="page">
+    <div class="section-title">📚 Theory of Fourier Series</div>
+    <div class="section-sub">Understanding the mathematical foundation of Fourier series over [0, 2π]</div>
+
+    <div class="card">
+      <h3>1. Introduction</h3>
+      <p>A <strong>Fourier series</strong> is a way to represent a periodic function as a sum of simple sine and cosine waves. It was introduced by French mathematician <em>Jean-Baptiste Joseph Fourier</em> (1768–1830) while studying heat flow.</p>
+      <p>Any reasonably well-behaved periodic function \( f(x) \) with period \( 2\pi \) can be expressed as an infinite sum of trigonometric functions:</p>
+      <div class="formula-box">
+        $$f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\left[a_n \cos(nx) + b_n \sin(nx)\right]$$
+      </div>
+      <p>where \(a_0\), \(a_n\), and \(b_n\) are called the <strong>Fourier coefficients</strong>.</p>
+    </div>
+
+    <div class="card">
+      <h3>2. Dirichlet Conditions</h3>
+      <p>For a function \(f(x)\) to have a convergent Fourier series, it must satisfy the <strong>Dirichlet conditions</strong>:</p>
+      <ol>
+        <li>The function \(f(x)\) must be <strong>bounded</strong> (finite in value).</li>
+        <li>It must have a <strong>finite number of maxima and minima</strong> in each period.</li>
+        <li>It must have a <strong>finite number of discontinuities</strong> in each period (and these must be finite jump discontinuities).</li>
+        <li>The function must be <strong>absolutely integrable</strong>: \( \int_0^{2\pi} |f(x)|\, dx < \infty \).</li>
+      </ol>
+      <div class="notice">
+        <strong>Note:</strong> The Dirichlet conditions are sufficient (not necessary). If satisfied, the Fourier series converges to \(f(x)\) at all points of continuity.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>3. Convergence Theorem</h3>
+      <p>At a point of continuity \(x_0\), the Fourier series converges to:</p>
+      <div class="formula-box">$$S(x_0) = f(x_0)$$</div>
+      <p>At a point of <strong>jump discontinuity</strong>, the Fourier series converges to the average of the left and right limits:</p>
+      <div class="formula-box">$$S(x_0) = \frac{f(x_0^-) + f(x_0^+)}{2}$$</div>
+    </div>
+
+    <div class="card">
+      <h3>4. Orthogonality of Trigonometric Functions</h3>
+      <p>The trigonometric functions \(\{1, \cos x, \sin x, \cos 2x, \sin 2x, \ldots\}\) form an <strong>orthogonal set</strong> over \([0, 2\pi]\). This means:</p>
+      <div class="formula-box">
+        $$\int_0^{2\pi} \cos(mx)\cos(nx)\,dx = \begin{cases} 0 & m \neq n \\ \pi & m = n \neq 0 \end{cases}$$
+        $$\int_0^{2\pi} \sin(mx)\sin(nx)\,dx = \begin{cases} 0 & m \neq n \\ \pi & m = n \end{cases}$$
+        $$\int_0^{2\pi} \cos(mx)\sin(nx)\,dx = 0 \quad \text{for all } m, n$$
+      </div>
+      <p>This orthogonality is what allows us to isolate each coefficient individually.</p>
+    </div>
+
+    <div class="card">
+      <h3>5. Even and Odd Functions</h3>
+      <div class="inline-row">
+        <div style="background:var(--blue-light);padding:16px;border-radius:10px;">
+          <h4>Even Function: \(f(-x) = f(x)\)</h4>
+          <p style="font-size:0.88rem">All sine terms vanish: \(b_n = 0\)</p>
+          <p style="font-size:0.88rem">The series contains only cosines (cosine series)</p>
+        </div>
+        <div style="background:var(--teal-light);padding:16px;border-radius:10px;">
+          <h4>Odd Function: \(f(-x) = -f(x)\)</h4>
+          <p style="font-size:0.88rem">All cosine terms vanish: \(a_0 = 0,\; a_n = 0\)</p>
+          <p style="font-size:0.88rem">The series contains only sines (sine series)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>6. Parseval's Theorem</h3>
+      <p>Parseval's theorem relates the energy in the time domain to the energy in the frequency domain:</p>
+      <div class="formula-box">
+        $$\frac{1}{\pi}\int_0^{2\pi} [f(x)]^2\,dx = \frac{a_0^2}{2} + \sum_{n=1}^{\infty}\left(a_n^2 + b_n^2\right)$$
+      </div>
+      <p>This is particularly useful for computing the sum of certain infinite series.</p>
+    </div>
+
+    <div class="card">
+      <h3>7. Physical Interpretation</h3>
+      <p>Fourier series have profound physical meaning. Any periodic signal — whether a musical note, an electrical waveform, or a vibrating string — can be decomposed into its constituent pure frequencies (harmonics):</p>
+      <ul>
+        <li><strong>\(a_0/2\):</strong> The DC component (average value)</li>
+        <li><strong>n=1:</strong> Fundamental frequency (first harmonic)</li>
+        <li><strong>n=2:</strong> Second harmonic (twice the frequency)</li>
+        <li><strong>n=k:</strong> k-th harmonic</li>
+      </ul>
+      <p>The simulator in this lab lets you see exactly how adding more harmonics builds up the approximation to any function.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════ FORMULA -->
+<section class="section" id="formula">
+  <div class="page">
+    <div class="section-title">📐 Fourier Series Formulas</div>
+    <div class="section-sub">Complete reference of all formulas for Fourier series on [0, 2π]</div>
+
+    <div class="card">
+      <h3>Main Formula</h3>
+      <p>The Fourier series expansion of \(f(x)\) on \([0,\, 2\pi]\) is defined as:</p>
+      <div class="formula-box">
+        $$\boxed{f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\left[a_n \cos(nx) + b_n \sin(nx)\right]}$$
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Fourier Coefficients</h3>
+
+      <h4>Constant Term — \(a_0\)</h4>
+      <div class="formula-box">
+        $$a_0 = \frac{1}{\pi}\int_0^{2\pi} f(x)\,dx$$
+      </div>
+      <p style="font-size:0.88rem; color:var(--text2);">This gives twice the mean value of \(f(x)\) over the period. The term \(a_0/2\) is the DC offset.</p>
+
+      <h4 style="margin-top:18px;">Cosine Coefficients — \(a_n\)</h4>
+      <div class="formula-box">
+        $$a_n = \frac{1}{\pi}\int_0^{2\pi} f(x)\cos(nx)\,dx, \quad n = 1, 2, 3, \ldots$$
+      </div>
+
+      <h4 style="margin-top:18px;">Sine Coefficients — \(b_n\)</h4>
+      <div class="formula-box">
+        $$b_n = \frac{1}{\pi}\int_0^{2\pi} f(x)\sin(nx)\,dx, \quad n = 1, 2, 3, \ldots$$
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>General Interval \([a,\, b]\)</h3>
+      <p>For a function with period \(L = b - a\) on the interval \([a, b]\):</p>
+      <div class="formula-box">
+        $$f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\left[a_n \cos\!\left(\frac{2n\pi x}{L}\right) + b_n \sin\!\left(\frac{2n\pi x}{L}\right)\right]$$
+      </div>
+      <div class="formula-box">
+        $$a_0 = \frac{2}{L}\int_a^{b} f(x)\,dx, \quad a_n = \frac{2}{L}\int_a^{b} f(x)\cos\!\left(\frac{2n\pi x}{L}\right)dx, \quad b_n = \frac{2}{L}\int_a^{b} f(x)\sin\!\left(\frac{2n\pi x}{L}\right)dx$$
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Special Function Results (on [0, 2π])</h3>
+      <div style="overflow-x:auto;">
+        <table class="coeff-table">
+          <thead>
+            <tr>
+              <th>Function \(f(x)\)</th>
+              <th>\(a_0\)</th>
+              <th>\(a_n\)</th>
+              <th>\(b_n\)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>\(f(x) = 1\)</td>
+              <td>\(2\)</td>
+              <td>\(0\)</td>
+              <td>\(0\)</td>
+            </tr>
+            <tr>
+              <td>\(f(x) = x\)</td>
+              <td>\(2\pi\)</td>
+              <td>\(0\)</td>
+              <td>\(-\dfrac{2}{n}\)</td>
+            </tr>
+            <tr>
+              <td>\(f(x) = x^2\)</td>
+              <td>\(\dfrac{8\pi^2}{3}\)</td>
+              <td>\(\dfrac{4}{n^2}\)</td>
+              <td>\(-\dfrac{4\pi}{n}\)</td>
+            </tr>
+            <tr>
+              <td>Square wave</td>
+              <td>\(0\)</td>
+              <td>\(0\)</td>
+              <td>\(\dfrac{4}{n\pi}\) (odd \(n\)), \(0\) (even \(n\))</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Parseval's Identity</h3>
+      <div class="formula-box">
+        $$\frac{1}{\pi}\int_0^{2\pi} [f(x)]^2\,dx = \frac{a_0^2}{2} + \sum_{n=1}^{N}\left(a_n^2 + b_n^2\right)$$
+      </div>
+    </div>
+
+    <div class="card card-teal">
+      <h3>Integration by Parts (Quick Reference)</h3>
+      <div class="formula-box">
+        $$\int u\,dv = uv - \int v\,du$$
+      </div>
+      <p>Useful identities when computing coefficients:</p>
+      <div class="formula-box">
+        $$\int x\cos(nx)\,dx = \frac{x\sin(nx)}{n} + \frac{\cos(nx)}{n^2} + C$$
+        $$\int x\sin(nx)\,dx = -\frac{x\cos(nx)}{n} + \frac{\sin(nx)}{n^2} + C$$
+        $$\int x^2\cos(nx)\,dx = \frac{x^2\sin(nx)}{n} + \frac{2x\cos(nx)}{n^2} - \frac{2\sin(nx)}{n^3} + C$$
+        $$\int x^2\sin(nx)\,dx = -\frac{x^2\cos(nx)}{n} + \frac{2x\sin(nx)}{n^2} + \frac{2\cos(nx)}{n^3} + C$$
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════ EXAMPLES -->
+<section class="section" id="examples">
+  <div class="page">
+    <div class="section-title">✏️ Worked Examples</div>
+    <div class="section-sub">Step-by-step Fourier series derivations for common functions on [0, 2π]</div>
+
+    <div class="example-tabs">
+      <div class="ex-tab active" onclick="showExample(0,this)">
+        <h4>Example 1</h4><p>f(x) = x</p>
+      </div>
+      <div class="ex-tab" onclick="showExample(1,this)">
+        <h4>Example 2</h4><p>f(x) = x²</p>
+      </div>
+      <div class="ex-tab" onclick="showExample(2,this)">
+        <h4>Example 3</h4><p>Square Wave</p>
+      </div>
+      <div class="ex-tab" onclick="showExample(3,this)">
+        <h4>Example 4</h4><p>f(x) = π − x</p>
+      </div>
+    </div>
+
+    <!-- Example 1: f(x) = x -->
+    <div id="ex-0">
+      <div class="card">
+        <span class="badge badge-blue">Example 1</span>
+        <h3 style="margin-top:10px;">Find the Fourier series of \(f(x) = x\) on \([0, 2\pi]\)</h3>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Compute \(a_0\)</h4>
+            <div class="formula-box">
+              $$a_0 = \frac{1}{\pi}\int_0^{2\pi} x\,dx = \frac{1}{\pi}\left[\frac{x^2}{2}\right]_0^{2\pi} = \frac{1}{\pi}\cdot\frac{4\pi^2}{2} = 2\pi$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Compute \(a_n\)</h4>
+            <div class="formula-box">
+              $$a_n = \frac{1}{\pi}\int_0^{2\pi} x\cos(nx)\,dx = \frac{1}{\pi}\left[\frac{x\sin(nx)}{n} + \frac{\cos(nx)}{n^2}\right]_0^{2\pi}$$
+              $$= \frac{1}{\pi}\left[\frac{2\pi\sin(2\pi n)}{n} + \frac{\cos(2\pi n)}{n^2} - \frac{\cos(0)}{n^2}\right] = \frac{1}{\pi}\left[0 + \frac{1}{n^2} - \frac{1}{n^2}\right] = 0$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Compute \(b_n\)</h4>
+            <div class="formula-box">
+              $$b_n = \frac{1}{\pi}\int_0^{2\pi} x\sin(nx)\,dx = \frac{1}{\pi}\left[-\frac{x\cos(nx)}{n} + \frac{\sin(nx)}{n^2}\right]_0^{2\pi}$$
+              $$= \frac{1}{\pi}\left[-\frac{2\pi\cos(2\pi n)}{n} + \frac{\sin(2\pi n)}{n^2} - 0\right] = \frac{1}{\pi}\left[-\frac{2\pi}{n}\right] = -\frac{2}{n}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Final Result</h4>
+            <div class="result-highlight">
+              $$x = \pi - 2\sum_{n=1}^{\infty}\frac{\sin(nx)}{n} = \pi - 2\sin x - \sin 2x - \frac{2}{3}\sin 3x - \cdots$$
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example 2: f(x) = x² -->
+    <div id="ex-1" style="display:none">
+      <div class="card">
+        <span class="badge badge-purple">Example 2</span>
+        <h3 style="margin-top:10px;">Find the Fourier series of \(f(x) = x^2\) on \([0, 2\pi]\)</h3>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Compute \(a_0\)</h4>
+            <div class="formula-box">
+              $$a_0 = \frac{1}{\pi}\int_0^{2\pi} x^2\,dx = \frac{1}{\pi}\left[\frac{x^3}{3}\right]_0^{2\pi} = \frac{1}{\pi}\cdot\frac{8\pi^3}{3} = \frac{8\pi^2}{3}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Compute \(a_n\) (using integration by parts twice)</h4>
+            <div class="formula-box">
+              $$a_n = \frac{1}{\pi}\int_0^{2\pi} x^2\cos(nx)\,dx$$
+              $$= \frac{1}{\pi}\left[\frac{x^2\sin(nx)}{n} + \frac{2x\cos(nx)}{n^2} - \frac{2\sin(nx)}{n^3}\right]_0^{2\pi} = \frac{1}{\pi}\cdot\frac{4\pi}{n^2} = \frac{4}{n^2}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Compute \(b_n\)</h4>
+            <div class="formula-box">
+              $$b_n = \frac{1}{\pi}\int_0^{2\pi} x^2\sin(nx)\,dx$$
+              $$= \frac{1}{\pi}\left[-\frac{x^2\cos(nx)}{n} + \frac{2x\sin(nx)}{n^2} + \frac{2\cos(nx)}{n^3}\right]_0^{2\pi} = \frac{1}{\pi}\left(-\frac{4\pi^2}{n}\right) = -\frac{4\pi}{n}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Final Result</h4>
+            <div class="result-highlight">
+              $$x^2 = \frac{4\pi^2}{3} + 4\sum_{n=1}^{\infty}\left[\frac{\cos(nx)}{n^2} - \frac{\pi\,\sin(nx)}{n}\right]$$
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example 3: Square Wave -->
+    <div id="ex-2" style="display:none">
+      <div class="card">
+        <span class="badge badge-teal">Example 3</span>
+        <h3 style="margin-top:10px;">Find the Fourier series of the Square Wave on \([0, 2\pi]\)</h3>
+        <p>Let \(f(x) = \begin{cases} 1 & 0 < x < \pi \\ -1 & \pi < x < 2\pi \end{cases}\)</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Compute \(a_0\)</h4>
+            <div class="formula-box">
+              $$a_0 = \frac{1}{\pi}\left[\int_0^{\pi} 1\,dx + \int_\pi^{2\pi}(-1)\,dx\right] = \frac{1}{\pi}[\pi - \pi] = 0$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Compute \(a_n\)</h4>
+            <div class="formula-box">
+              $$a_n = \frac{1}{\pi}\left[\int_0^{\pi}\cos(nx)\,dx - \int_\pi^{2\pi}\cos(nx)\,dx\right] = 0$$
+            </div>
+            <p style="font-size:0.87rem; margin-top:6px">This equals zero because the square wave is an odd function (when shifted by π).</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Compute \(b_n\)</h4>
+            <div class="formula-box">
+              $$b_n = \frac{1}{\pi}\left[\int_0^{\pi}\sin(nx)\,dx - \int_\pi^{2\pi}\sin(nx)\,dx\right]$$
+              $$= \frac{1}{\pi}\left[-\frac{\cos(nx)}{n}\right]_0^\pi - \frac{1}{\pi}\left[-\frac{\cos(nx)}{n}\right]_\pi^{2\pi}$$
+              $$= \frac{2}{\pi n}(1 - \cos(n\pi)) = \begin{cases} \dfrac{4}{n\pi} & n \text{ odd} \\ 0 & n \text{ even} \end{cases}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Final Result</h4>
+            <div class="result-highlight">
+              $$f(x) = \frac{4}{\pi}\sum_{n=1,3,5,\ldots}\frac{\sin(nx)}{n} = \frac{4}{\pi}\left(\sin x + \frac{\sin 3x}{3} + \frac{\sin 5x}{5} + \cdots\right)$$
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example 4: f(x) = pi - x -->
+    <div id="ex-3" style="display:none">
+      <div class="card">
+        <span class="badge badge-orange">Example 4</span>
+        <h3 style="margin-top:10px;">Find the Fourier series of \(f(x) = \pi - x\) on \([0, 2\pi]\)</h3>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Compute \(a_0\)</h4>
+            <div class="formula-box">
+              $$a_0 = \frac{1}{\pi}\int_0^{2\pi}(\pi - x)\,dx = \frac{1}{\pi}\left[\pi x - \frac{x^2}{2}\right]_0^{2\pi} = \frac{1}{\pi}\left[2\pi^2 - 2\pi^2\right] = 0$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Compute \(a_n\)</h4>
+            <div class="formula-box">
+              $$a_n = \frac{1}{\pi}\int_0^{2\pi}(\pi - x)\cos(nx)\,dx = \frac{1}{\pi}\left[(\pi-x)\frac{\sin(nx)}{n} + \frac{\cos(nx)}{n^2}\right]_0^{2\pi} = 0$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Compute \(b_n\)</h4>
+            <div class="formula-box">
+              $$b_n = \frac{1}{\pi}\int_0^{2\pi}(\pi - x)\sin(nx)\,dx = \frac{1}{\pi}\left[-(\pi-x)\frac{\cos(nx)}{n} - \frac{\sin(nx)}{n^2}\right]_0^{2\pi}$$
+              $$= \frac{1}{\pi}\left[0 - \frac{\pi}{n}\right] \cdot (-1) \cdot (-1) = \frac{1}{\pi}\cdot\frac{\pi}{n} \cdot 2 = \frac{2}{n}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Final Result</h4>
+            <div class="result-highlight">
+              $$\pi - x = 2\sum_{n=1}^{\infty}\frac{\sin(nx)}{n} = 2\sin x + \sin 2x + \frac{2}{3}\sin 3x + \cdots \quad x \in (0,\, 2\pi)$$
+            </div>
+            <p style="font-size:0.85rem; margin-top:8px; color:var(--text2)">At \(x=0\) and \(x=2\pi\) (discontinuities), the series converges to 0 (the average of π and −π).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════ SIMULATOR -->
+<section class="section" id="simulator">
+  <div class="page">
+    <div class="section-title">⚡ Interactive Fourier Simulator</div>
+    <div class="section-sub">Enter your function and parameters to compute Fourier coefficients and visualize the series</div>
+
+    <div class="inner-tabs">
+      <div class="inner-tab active" onclick="simMode('function',this)">📊 Function Mode</div>
+      <div class="inner-tab" onclick="simMode('coeffs',this)">🎛️ Coefficient Mode</div>
+    </div>
+
+    <!-- FUNCTION MODE -->
+    <div id="sim-function">
+      <div class="sim-grid">
+        <!-- Left panel: inputs -->
+        <div>
+          <div class="sim-panel">
+            <h3>⚙️ Parameters</h3>
+
+            <div class="form-group">
+              <label>Function f(x) — Use: sin, cos, sqrt, abs, pi, e, ^</label>
+              <input type="text" id="funcExpr" value="x" placeholder="e.g. x, x^2, sin(x), x*(2*pi - x)">
+            </div>
+
+            <div class="inline-row">
+              <div class="form-group">
+                <label>Lower Limit (a)</label>
+                <input type="number" id="limA" value="0" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Upper Limit (b)</label>
+                <input type="number" id="limB" value="6.2832" step="0.1" placeholder="2π ≈ 6.2832">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Number of Terms (N)</label>
+              <input type="number" id="numTerms" value="5" min="1" max="50">
+            </div>
+
+            <div class="form-group">
+              <label>Integration Points (accuracy)</label>
+              <select id="intPoints">
+                <option value="500">Standard (500 pts)</option>
+                <option value="1000" selected>High (1000 pts)</option>
+                <option value="2000">Very High (2000 pts)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="runSimulation()">
+              ▶ Calculate Fourier Series
+            </button>
+
+            <div class="notice" style="margin-top:14px;">
+              <strong>Tip:</strong> Enter any expression in x. Examples:<br>
+              • <code>x</code> → f(x) = x<br>
+              • <code>x^2</code> → f(x) = x²<br>
+              • <code>sin(x)+cos(2*x)</code><br>
+              • <code>x*(2*pi-x)</code>
+            </div>
+          </div>
+
+          <!-- Results panel -->
+          <div class="sim-panel" id="resultsPanel" style="margin-top:20px; display:none;">
+            <h3>📋 Coefficients</h3>
+            <p style="font-size:0.82rem; color:var(--text2); margin-bottom:12px;">Integration interval: [<span id="resA">—</span>, <span id="resB">—</span>], N = <span id="resN">—</span></p>
+            <p style="margin-bottom:12px;"><strong>a₀ = <span id="val-a0" style="color:var(--blue-mid)">—</span></strong></p>
+            <div style="overflow-x:auto;">
+              <table class="coeff-table" id="coeffTable">
+                <thead>
+                  <tr><th>n</th><th>aₙ</th><th>bₙ</th><th>Amplitude √(aₙ²+bₙ²)</th></tr>
+                </thead>
+                <tbody id="coeffBody"></tbody>
+              </table>
+            </div>
+            <div class="series-output" id="seriesOutput" style="display:none;">
+              <div class="series-label">FOURIER SERIES APPROXIMATION</div>
+              <div id="seriesText"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: canvas -->
+        <div>
+          <div class="canvas-wrap">
+            <h3 style="margin-bottom:14px;">📈 Wave Visualization</h3>
+            <canvas id="mainCanvas" height="320"></canvas>
+            <div class="canvas-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#1565c0"></div><span>Original f(x)</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#e65100"></div><span>Fourier Approximation</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#00897b"></div><span>Individual Harmonics</span></div>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <label style="font-size:0.83rem; font-weight:600; color:var(--text2);">N (live):</label>
+              <input type="range" id="nSlider" min="1" max="50" value="5" style="flex:1; min-width:120px;" oninput="updateN(this.value)">
+              <span id="nVal" style="font-weight:700; color:var(--blue-mid); min-width:30px; text-align:center">5</span>
+              <label style="display:flex; align-items:center; gap:5px; font-size:0.83rem;">
+                <input type="checkbox" id="showHarmonics" onchange="redrawCanvas()"> Show harmonics
+              </label>
+              <label style="display:flex; align-items:center; gap:5px; font-size:0.83rem;">
+                <input type="checkbox" id="showGrid" checked onchange="redrawCanvas()"> Grid
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COEFFICIENT MODE -->
+    <div id="sim-coeffs" style="display:none;">
+      <div class="sim-grid">
+        <div>
+          <div class="sim-panel">
+            <h3>🎛️ Direct Coefficient Input</h3>
+            <p style="font-size:0.83rem; color:var(--text2); margin-bottom:16px;">Enter a₀, aₙ, bₙ directly to see the wave \(\frac{a_0}{2} + \sum(a_n\cos nx + b_n\sin nx)\)</p>
+
+            <div class="form-group">
+              <label>a₀ (constant term × 2)</label>
+              <input type="number" id="c_a0" value="0" step="0.1" oninput="drawCoeffMode()">
+            </div>
+
+            <div id="coeff-rows"></div>
+
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button class="btn btn-secondary" onclick="addCoeffRow()" style="flex:1; justify-content:center;">+ Add Term</button>
+              <button class="btn btn-outline" onclick="removeCoeffRow()" style="flex:1; justify-content:center;">− Remove</button>
+            </div>
+
+            <div class="form-group" style="margin-top:16px;">
+              <label>Preset Functions</label>
+              <select id="presetSelect" onchange="loadPreset(this.value)">
+                <option value="">— Choose preset —</option>
+                <option value="sine">Pure sine: sin(x)</option>
+                <option value="cosine">Pure cosine: cos(x)</option>
+                <option value="square">Square wave (5 terms)</option>
+                <option value="sawtooth">Sawtooth (5 terms)</option>
+                <option value="triangle">Triangle wave (5 terms)</option>
+              </select>
+            </div>
+
+            <div class="series-output" style="margin-top:14px;">
+              <div class="series-label">CURRENT SERIES</div>
+              <div id="coeffModeFormula">f(x) = 0</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="canvas-wrap">
+            <h3 style="margin-bottom:14px;">📈 Wave (Coefficient Mode)</h3>
+            <canvas id="coeffCanvas" height="320"></canvas>
+            <div class="canvas-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div><span>f(x) from coefficients</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════ QUIZ -->
+<section class="section" id="quiz">
+  <div class="page">
+    <div class="section-title">🎯 Quiz — Test Your Knowledge</div>
+    <div class="section-sub">10 multiple-choice questions on Fourier Series</div>
+
+    <div id="quizStart" class="card" style="text-align:center; padding:40px;">
+      <div style="font-size:3rem; margin-bottom:12px;">🎯</div>
+      <h3 style="margin-bottom:10px;">Ready to test your knowledge?</h3>
+      <p style="margin-bottom:24px; color:var(--text2);">10 questions on Fourier series theory, formulas, and applications.</p>
+      <button class="btn btn-primary" style="display:inline-flex; width:auto;" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div id="quizArea" style="display:none;"></div>
+
+    <div id="quizResult" style="display:none;">
+      <div class="score-card">
+        <div class="big-num" id="scoreDisplay">0/10</div>
+        <div class="label">Your Score</div>
+      </div>
+      <div class="card" id="reviewArea"></div>
+      <div style="text-align:center; margin-top:20px;">
+        <button class="btn btn-primary" style="display:inline-flex; width:auto;" onclick="restartQuiz()">🔄 Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════ FOOTER -->
+<footer>
+  Virtual Fourier Series Lab — PCCOE Pune &nbsp;|&nbsp;
+  Developed by Siddhi Shinde, Shravani Gunjal, Swara Masanakatti &nbsp;|&nbsp;
+  Guided by Dr. Amruta Patil
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════ SCRIPT -->
+<script>
+/* ─── Tab navigation ─────────────────────────────────────────── */
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (el) el.classList.add('active');
+  if (id === 'simulator') { initSimCanvas(); initCoeffCanvas(); }
+}
+
+function showTabId(id) {
+  const tabs = document.querySelectorAll('.nav-tab');
+  const tabMap = { home:0, theory:1, formula:2, examples:3, simulator:4, quiz:5 };
+  showTab(id, tabs[tabMap[id]]);
+}
+
+/* ─── KaTeX rendering ────────────────────────────────────────── */
+function renderMath() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      { left: '$$', right: '$$', display: true },
+      { left: '$',  right: '$',  display: false }
+    ],
+    throwOnError: false
+  });
+}
+
+/* ─── Animated wave on cover ─────────────────────────────────── */
+function animateWave() {
+  const paths = [
+    { el: document.getElementById('wavePath1'), amp: 18, freq: 1,    speed: 0.025, phase: 0 },
+    { el: document.getElementById('wavePath2'), amp: 12, freq: 2,    speed: 0.04,  phase: 1 },
+    { el: document.getElementById('wavePath3'), amp: 8,  freq: 3,    speed: 0.06,  phase: 2 }
+  ];
+  let t = 0;
+  function frame() {
+    t += 1;
+    paths.forEach(p => {
+      if (!p.el) return;
+      let d = 'M';
+      for (let x = 0; x <= 800; x += 4) {
+        const y = 30 + p.amp * Math.sin(p.freq * (x / 800) * 2 * Math.PI + t * p.speed + p.phase);
+        d += `${x},${y.toFixed(2)} `;
+      }
+      p.el.setAttribute('d', d);
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+window.addEventListener('load', animateWave);
+
+
+/* ─── Examples tab switching ──────────────────────────────────── */
+function showExample(idx, el) {
+  [0,1,2,3].forEach(i => {
+    const d = document.getElementById('ex-' + i);
+    if (d) d.style.display = i === idx ? 'block' : 'none';
+  });
+  document.querySelectorAll('.ex-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+/* ─── Simulator: function evaluation ─────────────────────────── */
+function safeEval(expr, x) {
+  const e = expr
+    .replace(/\^/g, '**')
+    .replace(/\bpi\b/gi, String(Math.PI))
+    .replace(/\be\b/g, String(Math.E))
+    .replace(/\bsin\b/g, 'Math.sin')
+    .replace(/\bcos\b/g, 'Math.cos')
+    .replace(/\btan\b/g, 'Math.tan')
+    .replace(/\babs\b/g, 'Math.abs')
+    .replace(/\bsqrt\b/g, 'Math.sqrt')
+    .replace(/\bexp\b/g, 'Math.exp')
+    .replace(/\bln\b/g, 'Math.log')
+    .replace(/\blog\b/g, 'Math.log10')
+    .replace(/\bfloor\b/g, 'Math.floor')
+    .replace(/\bceil\b/g, 'Math.ceil');
+  try { return Function('x', '"use strict"; return (' + e + ');')(x); }
+  catch { return NaN; }
+}
+
+/* ─── Numerical integration (midpoint rule) ──────────────────── */
+function integrate(f, a, b, n) {
+  const h = (b - a) / n;
+  let s = 0;
+  for (let i = 0; i < n; i++) s += f(a + (i + 0.5) * h);
+  return s * h;
+}
+
+/* ─── Fourier coefficient computation ────────────────────────── */
+let storedCoeffs = null;
+let storedExpr   = '';
+let storedA = 0, storedB = 2 * Math.PI;
+let storedN = 5;
+
+function runSimulation() {
+  const expr = document.getElementById('funcExpr').value.trim();
+  const a    = parseFloat(document.getElementById('limA').value);
+  const b    = parseFloat(document.getElementById('limB').value);
+  const N    = parseInt(document.getElementById('numTerms').value);
+  const pts  = parseInt(document.getElementById('intPoints').value);
+
+  if (!expr || isNaN(a) || isNaN(b) || a >= b || isNaN(N) || N < 1) {
+    alert('Please enter valid parameters (b must be > a, N ≥ 1).');
+    return;
+  }
+
+  const L = b - a;
+  const f  = x => safeEval(expr, x);
+  const a0 = (2 / L) * integrate(f, a, b, pts);
+
+  const an = [], bn = [];
+  for (let n = 1; n <= N; n++) {
+    an.push((2 / L) * integrate(x => f(x) * Math.cos(2 * Math.PI * n * (x - a) / L), a, b, pts));
+    bn.push((2 / L) * integrate(x => f(x) * Math.sin(2 * Math.PI * n * (x - a) / L), a, b, pts));
+  }
+
+  storedCoeffs = { a0, an, bn };
+  storedExpr   = expr;
+  storedA = a; storedB = b; storedN = N;
+
+  // Update slider
+  const sl = document.getElementById('nSlider');
+  sl.max = N; sl.value = N;
+  document.getElementById('nVal').textContent = N;
+
+  displayResults(a0, an, bn, a, b, N);
+  redrawCanvas();
+}
+
+function displayResults(a0, an, bn, a, b, N) {
+  document.getElementById('resA').textContent = a.toFixed(4);
+  document.getElementById('resB').textContent = b.toFixed(4);
+  document.getElementById('resN').textContent = N;
+  document.getElementById('val-a0').textContent = a0.toFixed(6);
+
+  const tbody = document.getElementById('coeffBody');
+  tbody.innerHTML = '';
+  for (let i = 0; i < N; i++) {
+    const amp = Math.sqrt(an[i]**2 + bn[i]**2);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${an[i].toFixed(6)}</td><td>${bn[i].toFixed(6)}</td><td>${amp.toFixed(6)}</td>`;
+    tbody.appendChild(tr);
+  }
+
+  // Build series string
+  let s = `f(x) ≈ ${(a0/2).toFixed(4)}`;
+  const L = b - a;
+  for (let i = 0; i < Math.min(N, 5); i++) {
+    const n = i + 1;
+    const freq = `(${(2*Math.PI*n/L).toFixed(3)}(x-${a.toFixed(2)}))`;
+    if (Math.abs(an[i]) > 1e-8) s += `\n  + ${an[i].toFixed(4)}·cos${freq}`;
+    if (Math.abs(bn[i]) > 1e-8) s += `\n  + ${bn[i].toFixed(4)}·sin${freq}`;
+  }
+  if (N > 5) s += `\n  + … (${N-5} more terms)`;
+
+  document.getElementById('seriesText').textContent = s;
+  document.getElementById('seriesOutput').style.display = 'block';
+  document.getElementById('resultsPanel').style.display = 'block';
+}
+
+function updateN(v) {
+  document.getElementById('nVal').textContent = v;
+  storedN = parseInt(v);
+  redrawCanvas();
+}
+
+/* ─── Canvas drawing ─────────────────────────────────────────── */
+let mainCtx = null;
+function initSimCanvas() {
+  const c = document.getElementById('mainCanvas');
+  if (!c) return;
+  c.width = c.offsetWidth * window.devicePixelRatio || 600;
+  c.height = 320 * window.devicePixelRatio || 320;
+  mainCtx = c.getContext('2d');
+  mainCtx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  drawPlaceholder(mainCtx, c.offsetWidth, 320);
+}
+
+function drawPlaceholder(ctx, w, h) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#f0f5ff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#90a4ae';
+  ctx.font = '14px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Enter a function and click Calculate to see the wave', w/2, h/2);
+}
+
+function redrawCanvas() {
+  if (!mainCtx || !storedCoeffs) return;
+  const c    = document.getElementById('mainCanvas');
+  const W    = c.offsetWidth;
+  const H    = 320;
+  const N    = storedN;
+  const { a0, an, bn } = storedCoeffs;
+  const a = storedA, b = storedB, L = b - a;
+  const showHarm = document.getElementById('showHarmonics').checked;
+  const showGrid = document.getElementById('showGrid').checked;
+
+  ctx_draw(mainCtx, W, H, a0, an, bn, N, a, b, L, showHarm, showGrid);
+}
+
+function ctx_draw(ctx, W, H, a0, an, bn, N, a, b, L, showHarm, showGrid) {
+  ctx.clearRect(0, 0, W, H);
+
+  const PAD = { left: 52, right: 20, top: 20, bottom: 36 };
+  const PW  = W - PAD.left - PAD.right;
+  const PH  = H - PAD.top  - PAD.bottom;
+
+  // Evaluate function & series to find y-range
+  const XPTS = 400;
+  const xs = [], ys_orig = [], ys_approx = [];
+  for (let i = 0; i <= XPTS; i++) {
+    const xv = a + (i / XPTS) * L;
+    xs.push(xv);
+    ys_orig.push(safeEval(storedExpr, xv));
+    let yf = a0 / 2;
+    for (let n = 1; n <= N; n++) {
+      yf += (an[n-1] || 0) * Math.cos(2*Math.PI*n*(xv-a)/L);
+      yf += (bn[n-1] || 0) * Math.sin(2*Math.PI*n*(xv-a)/L);
+    }
+    ys_approx.push(yf);
+  }
+
+  const allY = [...ys_orig.filter(isFinite), ...ys_approx.filter(isFinite)];
+  let yMin = Math.min(...allY), yMax = Math.max(...allY);
+  const yRange = yMax - yMin || 1;
+  yMin -= yRange * 0.12; yMax += yRange * 0.12;
+
+  const px = x => PAD.left + ((x - a) / L) * PW;
+  const py = y => PAD.top  + (1 - (y - yMin) / (yMax - yMin)) * PH;
+
+  // Background
+  ctx.fillStyle = '#fafcff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  if (showGrid) {
+    ctx.strokeStyle = '#dde3f0';
+    ctx.lineWidth = 0.8;
+    for (let i = 0; i <= 5; i++) {
+      const yv = yMin + (i/5) * (yMax-yMin);
+      const yp = py(yv);
+      ctx.beginPath(); ctx.moveTo(PAD.left, yp); ctx.lineTo(W-PAD.right, yp); ctx.stroke();
+      ctx.fillStyle = '#78909c'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'right';
+      ctx.fillText(yv.toFixed(2), PAD.left - 4, yp + 3);
+    }
+    for (let i = 0; i <= 4; i++) {
+      const xv = a + (i/4) * L;
+      const xp = px(xv);
+      ctx.beginPath(); ctx.moveTo(xp, PAD.top); ctx.lineTo(xp, H-PAD.bottom); ctx.stroke();
+      ctx.fillStyle = '#78909c'; ctx.textAlign = 'center';
+      ctx.fillText(xv.toFixed(2), xp, H - PAD.bottom + 14);
+    }
+  }
+
+  // Axes
+  const y0p = py(0);
+  ctx.strokeStyle = '#546e7a'; ctx.lineWidth = 1.5;
+  if (y0p >= PAD.top && y0p <= H-PAD.bottom) {
+    ctx.beginPath(); ctx.moveTo(PAD.left, y0p); ctx.lineTo(W-PAD.right, y0p); ctx.stroke();
+  }
+  ctx.beginPath(); ctx.moveTo(PAD.left, PAD.top); ctx.lineTo(PAD.left, H-PAD.bottom); ctx.stroke();
+
+  // Draw individual harmonics (faint)
+  if (showHarm) {
+    for (let n = 1; n <= Math.min(N, 8); n++) {
+      ctx.beginPath(); ctx.strokeStyle = `hsl(${150+n*25},55%,55%)`; ctx.lineWidth = 1; ctx.globalAlpha = 0.4;
+      for (let i = 0; i <= XPTS; i++) {
+        const xv = xs[i];
+        const yv = (an[n-1]||0)*Math.cos(2*Math.PI*n*(xv-a)/L) + (bn[n-1]||0)*Math.sin(2*Math.PI*n*(xv-a)/L);
+        i ? ctx.lineTo(px(xv), py(yv)) : ctx.moveTo(px(xv), py(yv));
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Draw original function (blue)
+  ctx.beginPath(); ctx.strokeStyle = '#1565c0'; ctx.lineWidth = 2; ctx.setLineDash([6,4]);
+  ys_orig.forEach((y, i) => {
+    if (!isFinite(y)) return;
+    i ? ctx.lineTo(px(xs[i]), py(y)) : ctx.moveTo(px(xs[i]), py(y));
+  });
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Draw Fourier approximation (orange)
+  ctx.beginPath(); ctx.strokeStyle = '#e65100'; ctx.lineWidth = 2.5;
+  ys_approx.forEach((y, i) => {
+    if (!isFinite(y)) return;
+    i ? ctx.lineTo(px(xs[i]), py(y)) : ctx.moveTo(px(xs[i]), py(y));
+  });
+  ctx.stroke();
+
+  // Title
+  ctx.fillStyle = '#1a1a2e'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'left';
+  ctx.fillText(`f(x) = ${storedExpr}  |  N = ${N} terms  |  [${a.toFixed(2)}, ${b.toFixed(2)}]`, PAD.left, 13);
+}
+
+/* ─── Coefficient Mode ───────────────────────────────────────── */
+let coeffCtx = null;
+let coeffRows = [];
+
+function initCoeffCanvas() {
+  const c = document.getElementById('coeffCanvas');
+  if (!c) return;
+  c.width = c.offsetWidth * window.devicePixelRatio || 600;
+  c.height = 320 * window.devicePixelRatio || 320;
+  coeffCtx = c.getContext('2d');
+  coeffCtx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+}
+
+function simMode(mode, el) {
+  document.getElementById('sim-function').style.display = mode === 'function' ? 'block' : 'none';
+  document.getElementById('sim-coeffs').style.display   = mode === 'coeffs'   ? 'block' : 'none';
+  document.querySelectorAll('.inner-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (mode === 'coeffs') {
+    if (coeffRows.length === 0) { addCoeffRow(); addCoeffRow(); addCoeffRow(); }
+    initCoeffCanvas();
+    drawCoeffMode();
+  }
+}
+
+function addCoeffRow() {
+  const n = coeffRows.length + 1;
+  const row = { n, an: 0, bn: 0 };
+  coeffRows.push(row);
+  renderCoeffRows();
+  drawCoeffMode();
+}
+
+function removeCoeffRow() {
+  if (coeffRows.length > 1) { coeffRows.pop(); renderCoeffRows(); drawCoeffMode(); }
+}
+
+function renderCoeffRows() {
+  const container = document.getElementById('coeff-rows');
+  container.innerHTML = '';
+  coeffRows.forEach((row, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:40px 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px;';
+    div.innerHTML = `
+      <span style="font-weight:700;font-size:0.85rem;color:var(--blue-mid)">n=${row.n}</span>
+      <div>
+        <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:2px">aₙ (cos)</label>
+        <input type="number" step="0.1" value="${row.an}" style="width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:0.88rem;background:#f8faff;" oninput="updateCoeff(${i},'an',this.value)">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:var(--text2);display:block;margin-bottom:2px">bₙ (sin)</label>
+        <input type="number" step="0.1" value="${row.bn}" style="width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:0.88rem;background:#f8faff;" oninput="updateCoeff(${i},'bn',this.value)">
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function updateCoeff(i, key, val) {
+  coeffRows[i][key] = parseFloat(val) || 0;
+  drawCoeffMode();
+}
+
+function loadPreset(preset) {
+  coeffRows = [];
+  const presets = {
+    sine:     [{ n:1, an:0, bn:1 }],
+    cosine:   [{ n:1, an:1, bn:0 }],
+    square:   [1,3,5,7,9].map(n => ({ n, an:0, bn: 4/(n*Math.PI) })),
+    sawtooth: [1,2,3,4,5].map(n => ({ n, an:0, bn: -2/n })),
+    triangle: [1,3,5,7,9].map(n => ({ n, an: (n%4===1?1:-1)*8/(n*n*Math.PI*Math.PI), bn:0 }))
+  };
+  if (presets[preset]) { coeffRows = presets[preset]; renderCoeffRows(); drawCoeffMode(); }
+  document.getElementById('presetSelect').value = '';
+}
+
+function drawCoeffMode() {
+  const a0 = parseFloat(document.getElementById('c_a0').value) || 0;
+  const L  = 2 * Math.PI;
+  const a  = 0, b = L;
+
+  // Update formula string
+  let formula = `f(x) = ${(a0/2).toFixed(3)}`;
+  coeffRows.forEach(r => {
+    if (r.an) formula += ` + ${r.an.toFixed(3)}cos(${r.n}x)`;
+    if (r.bn) formula += ` + ${r.bn.toFixed(3)}sin(${r.n}x)`;
+  });
+  document.getElementById('coeffModeFormula').textContent = formula;
+
+  if (!coeffCtx) return;
+  const c = document.getElementById('coeffCanvas');
+  const W = c.offsetWidth, H = 320;
+
+  const XPTS = 400;
+  const xs = [], ys = [];
+  for (let i = 0; i <= XPTS; i++) {
+    const xv = (i / XPTS) * L;
+    xs.push(xv);
+    let y = a0 / 2;
+    coeffRows.forEach(r => {
+      y += r.an * Math.cos(r.n * xv);
+      y += r.bn * Math.sin(r.n * xv);
+    });
+    ys.push(y);
+  }
+
+  const allY = ys.filter(isFinite);
+  let yMin = Math.min(...allY), yMax = Math.max(...allY);
+  const yr = yMax - yMin || 1;
+  yMin -= yr * 0.15; yMax += yr * 0.15;
+
+  const PAD = { left:52, right:20, top:20, bottom:36 };
+  const PW = W-PAD.left-PAD.right, PH = H-PAD.top-PAD.bottom;
+  const px = x => PAD.left + (x/L)*PW;
+  const py = y => PAD.top + (1-(y-yMin)/(yMax-yMin))*PH;
+
+  coeffCtx.clearRect(0,0,W,H);
+  coeffCtx.fillStyle = '#fafcff'; coeffCtx.fillRect(0,0,W,H);
+
+  // Grid
+  coeffCtx.strokeStyle = '#dde3f0'; coeffCtx.lineWidth = 0.8;
+  for (let i=0;i<=5;i++){
+    const yv=yMin+(i/5)*(yMax-yMin), yp=py(yv);
+    coeffCtx.beginPath(); coeffCtx.moveTo(PAD.left,yp); coeffCtx.lineTo(W-PAD.right,yp); coeffCtx.stroke();
+    coeffCtx.fillStyle='#78909c'; coeffCtx.font='10px Segoe UI'; coeffCtx.textAlign='right';
+    coeffCtx.fillText(yv.toFixed(2),PAD.left-4,yp+3);
+  }
+
+  // x-axis
+  const y0 = py(0);
+  if(y0>=PAD.top && y0<=H-PAD.bottom){
+    coeffCtx.strokeStyle='#546e7a'; coeffCtx.lineWidth=1.5;
+    coeffCtx.beginPath(); coeffCtx.moveTo(PAD.left,y0); coeffCtx.lineTo(W-PAD.right,y0); coeffCtx.stroke();
+  }
+
+  // Individual harmonics
+  coeffRows.forEach((r,i) => {
+    coeffCtx.beginPath(); coeffCtx.strokeStyle=`hsl(${180+i*40},60%,55%)`; coeffCtx.lineWidth=1; coeffCtx.globalAlpha=0.35;
+    for(let j=0;j<=XPTS;j++){
+      const xv=xs[j], yv=r.an*Math.cos(r.n*xv)+r.bn*Math.sin(r.n*xv);
+      j ? coeffCtx.lineTo(px(xv),py(yv)) : coeffCtx.moveTo(px(xv),py(yv));
+    }
+    coeffCtx.stroke();
+  });
+  coeffCtx.globalAlpha=1;
+
+  // Main wave
+  coeffCtx.beginPath(); coeffCtx.strokeStyle='#7b1fa2'; coeffCtx.lineWidth=2.5;
+  ys.forEach((y,i) => {
+    if(!isFinite(y)) return;
+    i ? coeffCtx.lineTo(px(xs[i]),py(y)) : coeffCtx.moveTo(px(xs[i]),py(y));
+  });
+  coeffCtx.stroke();
+
+  // x-labels
+  [0,Math.PI/2,Math.PI,3*Math.PI/2,2*Math.PI].forEach((xv,i)=>{
+    const labels=['0','π/2','π','3π/2','2π'];
+    coeffCtx.fillStyle='#78909c'; coeffCtx.font='10px Segoe UI'; coeffCtx.textAlign='center';
+    coeffCtx.fillText(labels[i],px(xv),H-PAD.bottom+14);
+  });
+}
+
+
+/* ─── Quiz ───────────────────────────────────────────────────── */
+const QUESTIONS = [
+  {
+    q: 'The Fourier series of f(x) on [0, 2π] is written as:',
+    opts: [
+      'a₀ + Σ(aₙcos nx + bₙsin nx)',
+      'a₀/2 + Σ(aₙcos nx + bₙsin nx)',
+      'Σ(aₙcos nx + bₙsin nx)',
+      'a₀ + Σ(aₙsin nx + bₙcos nx)'
+    ],
+    ans: 1,
+    explain: 'The standard form uses a₀/2 as the constant term, where a₀/2 is the mean value of f(x).'
+  },
+  {
+    q: 'The Fourier coefficient a₀ for f(x) on [0, 2π] is:',
+    opts: [
+      '(1/2π)∫₀²π f(x) dx',
+      '(1/π)∫₀²π f(x) dx',
+      '∫₀²π f(x) dx',
+      '(2/π)∫₀²π f(x) dx'
+    ],
+    ans: 1,
+    explain: 'a₀ = (1/π)∫₀²π f(x) dx. This gives twice the mean value; a₀/2 is then the actual average.'
+  },
+  {
+    q: 'For f(x) = 1 on [0, 2π], what is the value of a₀?',
+    opts: ['0', '1', '2', 'π'],
+    ans: 2,
+    explain: 'a₀ = (1/π)∫₀²π 1·dx = (1/π)(2π) = 2.'
+  },
+  {
+    q: 'At a jump discontinuity x₀, the Fourier series converges to:',
+    opts: [
+      'f(x₀⁻) (left-hand limit)',
+      'f(x₀⁺) (right-hand limit)',
+      '[f(x₀⁻) + f(x₀⁺)] / 2',
+      'Zero'
+    ],
+    ans: 2,
+    explain: 'By the convergence theorem, the Fourier series converges to the average of the one-sided limits at a jump discontinuity.'
+  },
+  {
+    q: 'For an ODD function f(x), which coefficients are automatically zero?',
+    opts: ['bₙ = 0', 'aₙ = 0 and a₀ = 0', 'a₀ = 0 only', 'All coefficients are zero'],
+    ans: 1,
+    explain: 'For an odd function, cos(nx) terms (cosine = even function) integrate to zero, so a₀ = 0 and aₙ = 0.'
+  },
+  {
+    q: 'For f(x) = x on [0, 2π], the coefficient bₙ equals:',
+    opts: ['2/n', '−2/n', '1/n', '−1/n'],
+    ans: 1,
+    explain: 'bₙ = (1/π)∫₀²π x sin(nx) dx = (1/π)[−2π/n] = −2/n.'
+  },
+  {
+    q: 'Which condition is NOT one of the Dirichlet conditions?',
+    opts: [
+      'f(x) must be bounded',
+      'f(x) must be infinitely differentiable',
+      'f(x) must have a finite number of maxima and minima per period',
+      'f(x) must be absolutely integrable'
+    ],
+    ans: 1,
+    explain: 'Dirichlet conditions do NOT require infinite differentiability — only bounded variation and absolute integrability.'
+  },
+  {
+    q: 'Parseval\'s theorem states that (for Fourier series on [0, 2π]):',
+    opts: [
+      '(1/π)∫₀²π [f(x)]² dx = a₀²/2 + Σ(aₙ² + bₙ²)',
+      '∫₀²π [f(x)]² dx = Σ(aₙ² + bₙ²)',
+      '(1/2π)∫₀²π [f(x)]² dx = Σ(aₙ² + bₙ²)',
+      'None of the above'
+    ],
+    ans: 0,
+    explain: 'Parseval: (1/π)∫₀²π [f(x)]² dx = a₀²/2 + Σ(aₙ² + bₙ²). It equates total energy in time domain with frequency domain.'
+  },
+  {
+    q: 'The trigonometric functions {1, cos x, sin x, cos 2x, sin 2x, …} form a/an:',
+    opts: ['Complete set', 'Orthogonal set over [0, 2π]', 'Linearly dependent set', 'Divergent series'],
+    ans: 1,
+    explain: 'The inner product ∫₀²π cos(mx)cos(nx)dx = 0 for m≠n, confirming orthogonality.'
+  },
+  {
+    q: 'The Fourier series of a square wave (f(x) = ±1) contains:',
+    opts: [
+      'Only cosine terms',
+      'Only odd-indexed sine terms',
+      'Both sine and cosine terms',
+      'Only cosine and constant terms'
+    ],
+    ans: 1,
+    explain: 'The square wave (as defined here) is an odd-like function, so only bₙ are non-zero, and only for odd n: bₙ = 4/(nπ).'
+  }
+];
+
+let currentAnswers = [];
+let quizSubmitted = false;
+
+function startQuiz() {
+  document.getElementById('quizStart').style.display  = 'none';
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizArea').style.display   = 'block';
+  currentAnswers = new Array(QUESTIONS.length).fill(-1);
+  quizSubmitted  = false;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const area = document.getElementById('quizArea');
+  area.innerHTML = '';
+  QUESTIONS.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = `<div class="quiz-q-text">${qi+1}. ${q.q}</div><div class="quiz-options" id="opts-${qi}"></div>`;
+    area.appendChild(div);
+    const opts = div.querySelector('.quiz-options');
+    q.opts.forEach((opt, oi) => {
+      const btn = document.createElement('div');
+      btn.className = 'quiz-option';
+      btn.innerHTML = `<span style="font-weight:700;color:var(--blue-mid)">${'ABCD'[oi]}.</span> ${opt}`;
+      btn.onclick = () => selectAnswer(qi, oi);
+      btn.id = `opt-${qi}-${oi}`;
+      opts.appendChild(btn);
+    });
+  });
+
+  const submitDiv = document.createElement('div');
+  submitDiv.style.textAlign = 'center';
+  submitDiv.innerHTML = '<button class="btn btn-primary" style="display:inline-flex;width:auto;padding:14px 40px;" onclick="submitQuiz()">Submit Quiz</button>';
+  area.appendChild(submitDiv);
+}
+
+function selectAnswer(qi, oi) {
+  if (quizSubmitted) return;
+  currentAnswers[qi] = oi;
+  const opts = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  opts.forEach(o => o.classList.remove('selected'));
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+}
+
+function submitQuiz() {
+  if (currentAnswers.includes(-1)) {
+    alert('Please answer all questions before submitting.');
+    return;
+  }
+  quizSubmitted = true;
+  let score = 0;
+  QUESTIONS.forEach((q, qi) => {
+    const chosen = currentAnswers[qi];
+    const correct = q.ans;
+    if (chosen === correct) score++;
+    ['A','B','C','D'].forEach((_,oi) => {
+      const el = document.getElementById(`opt-${qi}-${oi}`);
+      if (!el) return;
+      if (oi === correct) el.classList.add('correct');
+      else if (oi === chosen) el.classList.add('wrong');
+    });
+  });
+
+  document.getElementById('quizArea').style.display   = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = `${score}/10`;
+
+  const reviewArea = document.getElementById('reviewArea');
+  reviewArea.innerHTML = `<h3 style="margin-bottom:16px;">Review Answers</h3>`;
+  QUESTIONS.forEach((q, qi) => {
+    const correct = currentAnswers[qi] === q.ans;
+    const div = document.createElement('div');
+    div.style.cssText = `padding:12px 14px;border-radius:10px;margin-bottom:10px;border-left:4px solid ${correct?'#2e7d32':'#c62828'};background:${correct?'#e8f5e9':'#ffebee'}`;
+    div.innerHTML = `
+      <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px">${qi+1}. ${q.q}</div>
+      <div style="font-size:0.83rem;color:${correct?'#1b5e20':'#b71c1c'}">${correct?'✓ Correct':'✗ Wrong'} — Answer: ${q.opts[q.ans]}</div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-top:4px">${q.explain}</div>`;
+    reviewArea.appendChild(div);
+  });
+}
+
+function restartQuiz() {
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizStart').style.display  = 'block';
+}
+
+/* ─── Init ───────────────────────────────────────────────────── */
+window.addEventListener('resize', () => {
+  if (storedCoeffs) redrawCanvas();
+  drawCoeffMode();
+});
+
+// Initialize main canvas on page load for home view
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const c = document.getElementById('mainCanvas');
+    if (c && mainCtx === null) {
+      initSimCanvas();
+    }
+  }, 200);
+});
+</script>
+</body>
+</html>
